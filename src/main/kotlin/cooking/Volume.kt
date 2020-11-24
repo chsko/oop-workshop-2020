@@ -11,8 +11,14 @@ class Volume(private val amount: Double, private val metric: Metric) {
 
     class Metric private constructor(private val baseUnitRatio: Double) {
         companion object {
-            val teaspoon = Metric(1.0)
+            private const val BASE_UNIT = 1.0
+            val teaspoon = Metric(BASE_UNIT * 1.0)
             val tablespoon = Metric(teaspoon.baseUnitRatio * 3.0)
+            val ounce = Metric(tablespoon.baseUnitRatio * 2.0)
+            val cup = Metric(ounce.baseUnitRatio * 8.0)
+            val pint = Metric(cup.baseUnitRatio * 2.0)
+            val quart = Metric(pint.baseUnitRatio * 2.0)
+            val gallon = Metric(quart.baseUnitRatio * 4.0)
         }
 
         fun convert(amount: Double) = this.baseUnitRatio * amount
