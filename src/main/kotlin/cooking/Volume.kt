@@ -5,6 +5,10 @@ import kotlin.math.roundToLong
 
 class Volume(private val amount: Double, private val metric: Metric) {
 
+    init {
+        require(amount >= 0) { "Must occupy a minimum of 1 unit of space, currently set to $amount" }
+    }
+
     private companion object {
         private const val ERROR_MARGIN = 0.01
     }

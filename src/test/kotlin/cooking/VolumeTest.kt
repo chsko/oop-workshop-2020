@@ -1,9 +1,19 @@
 package cooking
 
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.lang.IllegalArgumentException
 
 internal class VolumeTest {
+
+    @Test
+    @DisplayName("Volume must be >= 0")
+    fun init() {
+        assertThrows<IllegalArgumentException>{ (-1).teaspoon }
+        assertDoesNotThrow { 0.teaspoon }
+    }
 
     @Test
     fun tablespoons() {
