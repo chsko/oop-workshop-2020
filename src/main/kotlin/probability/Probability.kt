@@ -23,9 +23,13 @@ internal class Probability(private val likelihood: Double, min: Double = 0.0, ma
         return (this.likelihood - other.likelihood).absoluteValue < ERROR_MARGIN
     }
 
-    operator fun not() = Probability((UPPER_BOUND.toBigDecimal() - likelihood.toBigDecimal()).toDouble())
+    operator fun not() = Probability((UPPER_BOUND.toBigDecimal() - likelihood.toBigDecimal()).toDouble(), LOWER_BOUND, UPPER_BOUND)
 
     infix fun and(other: Probability) = Probability((this.likelihood * other.likelihood) / UPPER_BOUND, LOWER_BOUND, UPPER_BOUND)
 
+    infix fun or(other: Probability) = !(!other and !this)
+
     override fun hashCode() = (likelihood / ERROR_MARGIN).roundToLong().hashCode()
+
+    override fun toString(): String = "$likelihood"
 }
