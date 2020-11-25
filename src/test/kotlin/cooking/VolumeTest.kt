@@ -1,5 +1,12 @@
 package cooking
 
+import cooking.Volume.Unit.Companion.cup
+import cooking.Volume.Unit.Companion.gallon
+import cooking.Volume.Unit.Companion.ounce
+import cooking.Volume.Unit.Companion.pint
+import cooking.Volume.Unit.Companion.quart
+import cooking.Volume.Unit.Companion.tablespoon
+import cooking.Volume.Unit.Companion.teaspoon
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -98,7 +105,7 @@ internal class VolumeTest {
 
     @Test
     fun `same object`() {
-        val tablespoon = Volume(1.0, Volume.Unit.teaspoon)
+        val tablespoon = 1.tablespoon
         assertEquals(tablespoon, tablespoon)
     }
 
@@ -115,25 +122,4 @@ internal class VolumeTest {
         assertEquals(0.0013020833.gallon.hashCode(), 1.teaspoon.hashCode())
         assertNotEquals(0.75.tablespoon.hashCode(), 2.5.teaspoon.hashCode())
     }
-
-    private val Double.teaspoon get() = Volume(this, Volume.Unit.teaspoon)
-    private val Int.teaspoon get() = this.toDouble().teaspoon
-
-    private val Double.tablespoon get() = Volume(this, Volume.Unit.tablespoon)
-    private val Int.tablespoon get() = this.toDouble().tablespoon
-
-    private val Double.ounce get() = Volume(this, Volume.Unit.ounce)
-    private val Int.ounce get() = this.toDouble().ounce
-
-    private val Double.cup get() = Volume(this, Volume.Unit.cup)
-    private val Int.cup get() = this.toDouble().cup
-
-    private val Double.pint get() = Volume(this, Volume.Unit.pint)
-    private val Int.pint get() = this.toDouble().pint
-
-    private val Double.quart get() = Volume(this, Volume.Unit.quart)
-    private val Int.quart get() = this.toDouble().quart
-
-    private val Double.gallon get() = Volume(this, Volume.Unit.gallon)
-    private val Int.gallon get() = this.toDouble().gallon
 }
