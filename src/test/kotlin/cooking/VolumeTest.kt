@@ -97,9 +97,14 @@ internal class VolumeTest {
     }
 
     @Test
-    fun equals() {
+    fun `same object`() {
         val tablespoon = Volume(1.0, Volume.Unit.teaspoon)
         assertEquals(tablespoon, tablespoon)
+    }
+
+    @Test
+    fun `amount is 0`() {
+        assertEquals(0.tablespoon, 0.teaspoon)
     }
 
     @Test
@@ -109,7 +114,6 @@ internal class VolumeTest {
         assertEquals(0.75.tablespoon.hashCode(), 2.25.teaspoon.hashCode())
         assertEquals(0.0013020833.gallon.hashCode(), 1.teaspoon.hashCode())
         assertNotEquals(0.75.tablespoon.hashCode(), 2.5.teaspoon.hashCode())
-
     }
 
     private val Double.teaspoon get() = Volume(this, Volume.Unit.teaspoon)
