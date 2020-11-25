@@ -16,6 +16,11 @@ internal class VolumeTest {
     }
 
     @Test
+    fun teaspoons() {
+        assertEquals(0.0013020833.gallon, 1.teaspoon)
+    }
+
+    @Test
     fun tablespoons() {
         assertEquals(3.teaspoon, 1.tablespoon)
         assertEquals(2.25.teaspoon, 0.75.tablespoon)
@@ -81,31 +86,50 @@ internal class VolumeTest {
     }
 
     @Test
+    fun notEquals() {
+        assertNotEquals(1.tablespoon, 2.teaspoon)
+        assertNotEquals(3.ounce, 4.tablespoon)
+        assertNotEquals(4.cup, 15.ounce)
+        assertNotEquals(1.pint, 0.25.cup)
+        assertNotEquals(0.0001.quart, 0.01.pint)
+        assertNotEquals(10.gallon, 400.quart)
+        assertNotEquals(100.tablespoon, 1.gallon)
+    }
+
+    @Test
+    fun equals() {
+        val tablespoon = Volume(1.0, Volume.Unit.teaspoon)
+        assertEquals(tablespoon, tablespoon)
+    }
+
+    @Test
     fun hashcode() {
         assertEquals(1.tablespoon.hashCode(), 1.tablespoon.hashCode())
         assertEquals(1.tablespoon.hashCode(), 3.teaspoon.hashCode())
         assertEquals(0.75.tablespoon.hashCode(), 2.25.teaspoon.hashCode())
+        assertEquals(0.0013020833.gallon.hashCode(), 1.teaspoon.hashCode())
         assertNotEquals(0.75.tablespoon.hashCode(), 2.5.teaspoon.hashCode())
+
     }
 
-    private val Double.teaspoon get() = Volume(this, Volume.Metric.teaspoon)
+    private val Double.teaspoon get() = Volume(this, Volume.Unit.teaspoon)
     private val Int.teaspoon get() = this.toDouble().teaspoon
 
-    private val Double.tablespoon get() = Volume(this, Volume.Metric.tablespoon)
+    private val Double.tablespoon get() = Volume(this, Volume.Unit.tablespoon)
     private val Int.tablespoon get() = this.toDouble().tablespoon
 
-    private val Double.ounce get() = Volume(this, Volume.Metric.ounce)
+    private val Double.ounce get() = Volume(this, Volume.Unit.ounce)
     private val Int.ounce get() = this.toDouble().ounce
 
-    private val Double.cup get() = Volume(this, Volume.Metric.cup)
+    private val Double.cup get() = Volume(this, Volume.Unit.cup)
     private val Int.cup get() = this.toDouble().cup
 
-    private val Double.pint get() = Volume(this, Volume.Metric.pint)
+    private val Double.pint get() = Volume(this, Volume.Unit.pint)
     private val Int.pint get() = this.toDouble().pint
 
-    private val Double.quart get() = Volume(this, Volume.Metric.quart)
+    private val Double.quart get() = Volume(this, Volume.Unit.quart)
     private val Int.quart get() = this.toDouble().quart
 
-    private val Double.gallon get() = Volume(this, Volume.Metric.gallon)
+    private val Double.gallon get() = Volume(this, Volume.Unit.gallon)
     private val Int.gallon get() = this.toDouble().gallon
 }

@@ -1,12 +1,12 @@
 package cooking
 
-import cooking.Volume.Metric.Companion.tablespoon
-import cooking.Volume.Metric.Companion.teaspoon
+import cooking.Volume.Unit.Companion.tablespoon
+import cooking.Volume.Unit.Companion.teaspoon
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-class MetricTest {
+class UnitTest {
 
     @Test
     @DisplayName("convert tablespoon (3 base unit)")
