@@ -1,12 +1,18 @@
 package cooking
 
+import cooking.Volume.Unit.Companion.chain
 import cooking.Volume.Unit.Companion.cup
+import cooking.Volume.Unit.Companion.foot
+import cooking.Volume.Unit.Companion.furlong
 import cooking.Volume.Unit.Companion.gallon
+import cooking.Volume.Unit.Companion.inch
+import cooking.Volume.Unit.Companion.mile
 import cooking.Volume.Unit.Companion.ounce
 import cooking.Volume.Unit.Companion.pint
 import cooking.Volume.Unit.Companion.quart
 import cooking.Volume.Unit.Companion.tablespoon
 import cooking.Volume.Unit.Companion.teaspoon
+import cooking.Volume.Unit.Companion.yard
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -101,6 +107,21 @@ internal class VolumeTest {
         assertNotEquals(0.0001.quart, 0.01.pint)
         assertNotEquals(10.gallon, 400.quart)
         assertNotEquals(100.tablespoon, 1.gallon)
+    }
+
+    @Test
+    fun `distance measures`() {
+        assertEquals(12.inch, 1.foot)
+        assertEquals(3.foot, 1.yard)
+        assertEquals(22.yard, 1.chain)
+        assertEquals(10.chain, 1.furlong)
+        assertEquals(8.furlong, 1.mile)
+        assertEquals(0.00001578.mile, 1.inch)
+    }
+
+    @Test
+    fun `different types`() {
+        assertNotEquals(1.tablespoon, 1.inch)
     }
 
     @Test
