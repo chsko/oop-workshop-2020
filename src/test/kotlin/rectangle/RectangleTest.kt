@@ -1,8 +1,8 @@
 package rectangle
 
+import comparable.Comparable.Companion.best
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import rectangle.Rectangle.Companion.best
 import rectangle.Rectangle.Companion.rectangle
 import rectangle.Rectangle.Companion.square
 

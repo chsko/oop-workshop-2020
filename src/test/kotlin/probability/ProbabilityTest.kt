@@ -1,55 +1,56 @@
 package probability
 
+import comparable.Comparable.Companion.best
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import probability.Probability.Companion.p
 
 // Understands testing Probability
 internal class ProbabilityTest {
 
     @Test
     fun isCertain() {
-        assertTrue(Probability(1.0).isCertain())
-        assertFalse(Probability(0.3).isCertain())
-        assertFalse(Probability(0.7).isCertain())
-        assertFalse(Probability(0.0).isCertain())
+        assertTrue(p(1.0).isCertain())
+        assertFalse(p(0.3).isCertain())
+        assertFalse(p(0.7).isCertain())
+        assertFalse(p(0.0).isCertain())
     }
 
     @Test
     fun isNever() {
-        assertFalse(Probability(1.0).isNever())
-        assertFalse(Probability(0.7).isNever())
-        assertTrue(Probability(0.0).isNever())
+        assertFalse(p(1.0).isNever())
+        assertFalse(p(0.7).isNever())
+        assertTrue(p(0.0).isNever())
     }
 
     @Test
     fun not() {
-        assertEquals(Probability(0.3), !Probability(0.7))
-        assertEquals(Probability(1.0), !Probability(0.0))
-        assertEquals(Probability(0.3), !!Probability(0.3))
-        assertNotEquals(Probability(1.0), !Probability(1.0))
+        assertEquals(p(0.3), !p(0.7))
+        assertEquals(p(1.0), !p(0.0))
+        assertEquals(p(0.3), !!p(0.3))
+        assertNotEquals(p(1.0), !p(1.0))
     }
 
     @Test
     fun and() {
-        assertEquals(Probability(1.0), Probability(1.0) and Probability(1.0))
-        assertEquals(Probability(0.75), Probability(0.75) and Probability(1.0))
-        assertEquals(Probability(0.16), Probability(0.4) and Probability(0.4))
-        assertEquals(Probability(0.21), Probability(0.7) and Probability(0.3))
-        assertEquals(Probability(0.375), Probability(0.75) and Probability(0.5))
-        assertNotEquals(Probability(0.7), Probability(0.7) and Probability(0.7))
-        assertNotEquals(Probability(0.16), Probability(0.5) and Probability(0.4))
+        assertEquals(p(1.0), p(1.0) and p(1.0))
+        assertEquals(p(0.75), p(0.75) and p(1.0))
+        assertEquals(p(0.16), p(0.4) and p(0.4))
+        assertEquals(p(0.21), p(0.7) and p(0.3))
+        assertEquals(p(0.375), p(0.75) and p(0.5))
+        assertNotEquals(p(0.7), p(0.7) and p(0.7))
+        assertNotEquals(p(0.16), p(0.5) and p(0.4))
     }
 
     @Test
     fun or() {
-        assertEquals(Probability(1.0), Probability(1.0) or Probability(1.0))
-        assertEquals(Probability(1.0), Probability(0.75) or Probability(1.0))
-        assertEquals(Probability(0.64), Probability(0.4) or Probability(0.4))
-        assertEquals(Probability(0.79), Probability(0.7) or Probability(0.3))
-        assertEquals(Probability(0.875), Probability(0.75) or Probability(0.5))
-        assertNotEquals(Probability(0.7), Probability(0.7) or Probability(0.7))
-        assertNotEquals(Probability(0.16), Probability(0.5) or Probability(0.4))
+        assertEquals(p(1.0), p(1.0) or p(1.0))
+        assertEquals(p(1.0), p(0.75) or p(1.0))
+        assertEquals(p(0.64), p(0.4) or p(0.4))
+        assertEquals(p(0.79), p(0.7) or p(0.3))
+        assertEquals(p(0.875), p(0.75) or p(0.5))
+        assertNotEquals(p(0.7), p(0.7) or p(0.7))
+        assertNotEquals(p(0.16), p(0.5) or p(0.4))
     }
 
     @Test
@@ -69,22 +70,27 @@ internal class ProbabilityTest {
     }
 
     @Test
+    fun comparable() {
+        assertEquals(p(0.1), listOf(p(0.5), p(0.8), p(0.1), p(1.0)).best())
+    }
+
+    @Test
     fun equals() {
-        val probability = Probability(1.0)
-        assertEquals(Probability(1.0), Probability(1.0))
-        assertEquals(Probability(0.3), Probability(0.3))
-        assertNotEquals(Probability(0.0), Probability(1.0))
-        assertNotEquals(Probability(0.3), Probability(0.7))
+        val probability = p(1.0)
+        assertEquals(p(1.0), p(1.0))
+        assertEquals(p(0.3), p(0.3))
+        assertNotEquals(p(0.0), p(1.0))
+        assertNotEquals(p(0.3), p(0.7))
         assertEquals(probability, probability)
     }
 
     @Test
     fun hashcode() {
-        assertEquals(Probability(1.0).hashCode(), Probability(1.0).hashCode())
-        assertEquals(Probability(0.7).hashCode(), Probability(0.7).hashCode())
-        assertEquals(Probability(0.3).hashCode(), (!!Probability(0.3)).hashCode())
-        assertEquals(Probability(0.3).hashCode(), (!Probability(0.7)).hashCode())
+        assertEquals(p(1.0).hashCode(), p(1.0).hashCode())
+        assertEquals(p(0.7).hashCode(), p(0.7).hashCode())
+        assertEquals(p(0.3).hashCode(), (!!p(0.3)).hashCode())
+        assertEquals(p(0.3).hashCode(), (!p(0.7)).hashCode())
     }
 
-    private fun percentage(fraction: Int) = Probability(fraction.toDouble(), 0.0, 100.0)
+    private fun percentage(fraction: Int) = p(fraction.toDouble(), 0.0, 100.0)
 }

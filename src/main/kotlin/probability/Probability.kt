@@ -1,10 +1,11 @@
 package probability
 
+import comparable.Comparable
 import kotlin.math.absoluteValue
 import kotlin.math.roundToLong
 
 // Understands degree of certainty
-internal class Probability(private val likelihood: Double, min: Double = 0.0, max: Double = 1.0) {
+internal class Probability private constructor(private val likelihood: Double, min: Double, max: Double): Comparable<Probability> {
 
     private val LOWER_BOUND = min
     private val UPPER_BOUND = max
@@ -12,6 +13,11 @@ internal class Probability(private val likelihood: Double, min: Double = 0.0, ma
 
     init {
         require(likelihood in LOWER_BOUND..UPPER_BOUND)
+    }
+
+    companion object {
+        fun p(likelihood: Number, min: Number = 0.0, max: Number = 1.0) =
+            Probability(likelihood.toDouble(), min.toDouble(), max.toDouble())
     }
 
     fun isCertain() = likelihood == UPPER_BOUND
@@ -32,4 +38,5 @@ internal class Probability(private val likelihood: Double, min: Double = 0.0, ma
     override fun hashCode() = (likelihood / ERROR_MARGIN).roundToLong().hashCode()
 
     override fun toString(): String = "$likelihood"
+    override fun betterThan(other: Probability) = this.likelihood < other.likelihood
 }
