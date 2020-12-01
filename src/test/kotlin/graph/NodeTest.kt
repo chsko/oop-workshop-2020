@@ -2,6 +2,8 @@ package graph
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.lang.IllegalArgumentException
 
 internal class NodeTest {
     companion object {
@@ -58,6 +60,11 @@ internal class NodeTest {
         val path = nodeC pathTo nodeF
         assertEquals(10.0, path.cost())
         assertEquals(4, path.hopCount())
+    }
+
+    @Test
+    fun noPath() {
+        assertThrows<IllegalArgumentException> { nodeB pathTo nodeG }
     }
 
     @Test

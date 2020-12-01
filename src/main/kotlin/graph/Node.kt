@@ -1,27 +1,26 @@
 package graph
 
 import graph.Node.Vertex.Companion.hopCountStrategy
-import graph.Node.Vertex.Companion.cost
-import java.lang.IllegalArgumentException
+import graph.Path.Companion.NO_PATH
 
 class Node {
     private val vertices = mutableListOf<Vertex>()
 
     companion object {
-        private val UNREACHABLE = Double.POSITIVE_INFINITY
+        internal const val UNREACHABLE = Double.POSITIVE_INFINITY
     }
 
-    infix fun canReach(destination: Node) = this.cost(destination, emptyList(), hopCountStrategy) != UNREACHABLE
+    infix fun connectsTo(target: Node) = this.costs(1.0).connectsTo(target)
 
     infix fun costs(amount: Number) = VertexBuilder(this, amount.toDouble())
 
-    infix fun connectsTo(target: Node) = this.costs(1.0).connectsTo(target)
+    infix fun canReach(destination: Node) = path(destination).goesAllTheWay()
 
     infix fun hopCount(destination: Node) = cost(destination, hopCountStrategy).toInt()
 
     infix fun minCost(destination: Node) = pathTo(destination).cost()
 
-    infix fun pathTo(destination: Node) = path(destination, emptyList()) ?: throw IllegalArgumentException("Destination is unreachable")
+    infix fun pathTo(destination: Node) = path(destination).also { require(it.goesAllTheWay()) { "The destination cannot be reached" } }
 
     private fun cost(destination: Node, accumulateStrategy: (Double) -> Double) = cost(destination, emptyList(), accumulateStrategy).also {
         require(it != UNREACHABLE) { "There is no edge to this destination" }
@@ -34,23 +33,10 @@ class Node {
             ?: UNREACHABLE
     }
 
-    private fun path(destination: Node, visited: List<Node>): Path? {
+    private fun path(destination: Node, visited: List<Node> = emptyList()): Path {
         if (destination == this) return Path()
-        if (this in visited) return null
-        return vertices.mapNotNull { vertex -> vertex.path(destination, visited + this) }.minOrNull()
-    }
-
-    // Understands walking from a source to a destination via a set of vertices
-    class Path internal constructor(): Comparable<Path> {
-        private val vertices: MutableList<Vertex> = mutableListOf()
-
-        fun cost() = vertices.cost()
-
-        fun hopCount() = vertices.size
-
-        internal fun prepend(vertex: Vertex) = vertices.add(0, vertex)
-
-        override fun compareTo(other: Path) = this.cost().compareTo(other.cost())
+        if (this in visited) return NO_PATH
+        return vertices.map { vertex -> vertex.path(destination, visited + this) }.minOrNull() ?: NO_PATH
     }
 
     // Understands how to connect to a Node
@@ -58,7 +44,7 @@ class Node {
         fun cost(destination: Node, visited: List<Node>, costStrategy: (Double) -> Double)
         = target.cost(destination, visited, costStrategy) + costStrategy(cost)
 
-        fun path(destination: Node, visited: List<Node>) = target.path(destination, visited)?.also { it.prepend(this) }
+        fun path(destination: Node, visited: List<Node>) = target.path(destination, visited).also { it.prepend(this) }
 
         companion object {
             val hopCountStrategy = { _: Double -> 1.0 }
