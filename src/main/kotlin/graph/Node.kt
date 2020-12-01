@@ -1,8 +1,8 @@
 package graph
 
-import graph.Node.Vertex.Companion.costStrategy
 import graph.Node.Vertex.Companion.hopCountStrategy
-import graph.Node.Vertex.Companion.totalCost
+import graph.Node.Vertex.Companion.cost
+import java.lang.IllegalArgumentException
 
 class Node {
     private val vertices = mutableListOf<Vertex>()
@@ -19,9 +19,9 @@ class Node {
 
     infix fun hopCount(destination: Node) = cost(destination, hopCountStrategy).toInt()
 
-    infix fun minCost(destination: Node) = cost(destination, costStrategy)
+    infix fun minCost(destination: Node) = pathTo(destination).cost()
 
-    infix fun pathTo(destination: Node) = path(destination, emptyList())
+    infix fun pathTo(destination: Node) = path(destination, emptyList()) ?: throw IllegalArgumentException("Destination is unreachable")
 
     private fun cost(destination: Node, accumulateStrategy: (Double) -> Double) = cost(destination, emptyList(), accumulateStrategy).also {
         require(it != UNREACHABLE) { "There is no edge to this destination" }
@@ -43,12 +43,13 @@ class Node {
     // Understands walking from a source to a destination via a set of vertices
     class Path internal constructor(): Comparable<Path> {
         private val vertices: MutableList<Vertex> = mutableListOf()
-        fun cost() = vertices.totalCost()
+
+        fun cost() = vertices.cost()
+
         fun hopCount() = vertices.size
 
-        internal fun prepend(vertex: Vertex) {
-            vertices.add(0, vertex)
-        }
+        internal fun prepend(vertex: Vertex) = vertices.add(0, vertex)
+
         override fun compareTo(other: Path) = this.cost().compareTo(other.cost())
     }
 
@@ -61,8 +62,7 @@ class Node {
 
         companion object {
             val hopCountStrategy = { _: Double -> 1.0 }
-            val costStrategy = { cost: Double -> cost }
-            fun List<Vertex>.totalCost() = this.sumByDouble { it.cost }
+            fun List<Vertex>.cost() = this.sumByDouble { it.cost }
         }
     }
 
