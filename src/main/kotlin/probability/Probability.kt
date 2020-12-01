@@ -38,5 +38,6 @@ internal class Probability private constructor(private val likelihood: Double, m
     override fun hashCode() = (likelihood / ERROR_MARGIN).roundToLong().hashCode()
 
     override fun toString(): String = "$likelihood"
+
     override fun betterThan(other: Probability) = this.likelihood < other.likelihood
 }
