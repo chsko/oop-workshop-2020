@@ -1,31 +1,33 @@
 package graph
 
 import graph.Node.Companion.UNREACHABLE
-import graph.Node.Vertex.Companion.cost
+import graph.Vertex.Companion.cost
 
 // Understands walking from a source to a destination via a set of vertices
-open class Path internal constructor(): Comparable<Path> {
-    private val vertices: MutableList<Node.Vertex> = mutableListOf()
+open class Path internal constructor(private val costStrategy: (Path) -> Double): Comparable<Path> {
+    private val vertices: MutableList<Vertex> = mutableListOf()
 
     open fun cost() = vertices.cost()
 
-    open fun hopCount() = vertices.size
+    fun hopCount() = hops().toInt()
 
-    internal fun prepend(vertex: Node.Vertex) = vertices.add(0, vertex)
+    protected open fun hops() = vertices.size.toDouble()
 
-    override fun compareTo(other: Path) = this.cost().compareTo(other.cost())
+    internal fun prepend(vertex: Vertex) = vertices.add(0, vertex)
 
-    internal fun goesAllTheWay() = cost() != UNREACHABLE
+    override fun compareTo(other: Path) = costStrategy(this).compareTo(costStrategy(other))
+
+    internal fun goesAllTheWay() = cost().isFinite()
 
     companion object {
-        val NO_PATH = object : Path() {
-            override fun cost(): Double {
-                return UNREACHABLE
-            }
 
-            override fun hopCount(): Int {
-                return UNREACHABLE.toInt()
-            }
+        val minCost = { path: Path -> path.cost() }
+        val hopCount = { path: Path -> path.hops() }
+
+        internal val NO_PATH = object : Path(minCost) {
+            override fun cost() = UNREACHABLE
+
+            override fun hops() = UNREACHABLE
         }
     }
 }

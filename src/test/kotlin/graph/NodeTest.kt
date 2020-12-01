@@ -18,11 +18,11 @@ internal class NodeTest {
     }
 
     init {
-        nodeB costs 6.0 connectsTo nodeC costs 1.0 connectsTo nodeD costs 2.0 connectsTo nodeE costs 3.0 connectsTo nodeB costs 4.0 connectsTo nodeF
-        nodeB costs 5.0 connectsTo nodeA
-        nodeC costs 7.0 connectsTo nodeD
-        nodeC costs 8.0 connectsTo nodeE
-        nodeH connectsTo nodeB
+        nodeB costs 6.0 to nodeC costs 1.0 to nodeD costs 2.0 to nodeE costs 3.0 to nodeB costs 4.0 to nodeF
+        nodeB costs 5.0 to nodeA
+        nodeC costs 7.0 to nodeD
+        nodeC costs 8.0 to nodeE
+        nodeH to nodeB
     }
 
     @Test
@@ -49,29 +49,39 @@ internal class NodeTest {
 
     @Test
     fun hopCount() {
-        assertEquals(3, nodeC hopCount nodeF)
-        assertEquals(1, nodeB hopCount nodeF)
-        assertEquals(2, nodeD hopCount nodeB)
-        assertEquals(0, nodeB hopCount nodeB)
+        assertThrows<IllegalArgumentException> { nodeA leastHopsTo nodeF }
+        assertEquals(3, nodeC leastHopsTo nodeF)
+        assertEquals(1, nodeB leastHopsTo nodeF)
+        assertEquals(2, nodeD leastHopsTo nodeB)
+        assertEquals(0, nodeB leastHopsTo nodeB)
     }
 
-    @Test
-    fun pathTo() {
-        val path = nodeC pathTo nodeF
-        assertEquals(10.0, path.cost())
-        assertEquals(4, path.hopCount())
+    @Test fun cost() {
+        assertEquals(0.0, nodeB leastCostTo nodeB)
+        assertEquals(5.0, nodeB leastCostTo nodeA)
+        assertEquals(4.0, nodeB leastCostTo nodeF)
+        assertEquals(7.0, nodeB leastCostTo nodeD)
+        assertEquals(10.0, nodeC leastCostTo nodeF)
+        assertEquals(10.0, nodeE leastCostTo nodeD)
+        assertThrows<IllegalArgumentException> { nodeG leastCostTo nodeB }
+        assertThrows<IllegalArgumentException> { nodeA leastCostTo nodeB }
+        assertThrows<IllegalArgumentException> { nodeB leastCostTo nodeG }
     }
 
-    @Test
-    fun noPath() {
-        assertThrows<IllegalArgumentException> { nodeB pathTo nodeG }
+    @Test fun path() {
+        assertPath(nodeA, nodeA, 0, 0)
+        assertPath(nodeB, nodeA, 1, 5)
+        assertPath(nodeB, nodeF, 1, 4)
+        assertPath(nodeB, nodeD, 2, 7)
+        assertPath(nodeC, nodeF, 4, 10)
+        assertThrows<IllegalArgumentException> { nodeG cheapestPathTo nodeB }
+        assertThrows<IllegalArgumentException> { nodeA cheapestPathTo nodeB }
+        assertThrows<IllegalArgumentException> { nodeB cheapestPathTo nodeG }
     }
 
-    @Test
-    fun `weighted vertices`() {
-        assertEquals(10.0, nodeC minCost nodeF)
-        assertEquals(7.0, nodeB minCost nodeD)
-        assertEquals(0.0, nodeB minCost nodeB)
-        assertEquals(10.0, nodeE minCost nodeD)
+    private fun assertPath(source: Node, destination: Node, expectedHopCount: Int, expectedCost: Number) {
+        val p = source cheapestPathTo destination
+        assertEquals(expectedHopCount, p.hopCount())
+        assertEquals(expectedCost.toDouble(), p.cost())
     }
 }
